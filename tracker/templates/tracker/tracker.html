@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker - GeoTracker</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function fetchData() {
+            fetch("{% url 'tracker_data' %}")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('lat').innerText = data.lat;
+                    document.getElementById('lon').innerText = data.lon;
+                    document.getElementById('update_time').innerText = data.update_time;
+
+                    let closePlacesList = document.getElementById('close_places');
+                    closePlacesList.innerHTML = '';
+                    data.close_places.forEach(place => {
+                        let li = document.createElement('li');
+                        li.innerText = place;
+                        closePlacesList.appendChild(li);
+                    });
+
+                    document.getElementById('map').src = data.map_url + "?" + new Date().getTime();
+                })
+                .catch(error => console.log('Error fetching data:', error));
+        }
+
+        setInterval(fetchData, 15000);
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">GeoTracker</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tracker_view' %}">Tracker</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'geofence_list' %}">Geofences</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>GPS Coordinates</h1>
+        <p>Latitude: <span id="lat">{{ lat }}</span></p>
+        <p>Longitude: <span id="lon">{{ lon }}</span></p>
+        <p>Last Update Time: <span id="update_time">{{ update_time }}</span></p>
+
+        <h2>Close Places</h2>
+        <ul id="close_places">
+            {% for place in close_places %}
+                <li>{{ place }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Map</h2>
+        <iframe id="map" src="{{ map_url }}" width="600" height="450"></iframe>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.com/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
