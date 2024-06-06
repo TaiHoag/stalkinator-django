@@ -14,8 +14,8 @@ WORK IN PROGRESS
 1. **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/yourusername/geotracker.git
-    cd geotracker
+    git clone https://github.com/TaiHoag/stalkinator-django.git
+    cd stalkinator-django
     ```
 
 2. **Create a Virtual Environment:**
