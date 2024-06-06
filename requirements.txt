@@ -1,0 +1,7 @@
+arduino_iot_client==1.4.4
+Django==5.0.6
+folium==0.16.0
+oauthlib==3.2.2
+plyer==2.1.0
+Requests==2.32.3
+requests_oauthlib==2.0.0
