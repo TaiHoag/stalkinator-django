@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import requests
+import os
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
 import iot_api_client as iot
@@ -8,6 +9,7 @@ from iot_api_client.rest import ApiException
 from iot_api_client.configuration import Configuration
 import datetime
 import folium
+from django.conf import settings
 from plyer import notification
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
@@ -51,7 +53,6 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
 
-@require_POST
 def logout_view(request):
     logout(request)
     return redirect('home')
@@ -178,13 +179,19 @@ def geoapify(last_value):
     return lat, lon, points, close_places, map_url
 
 def generate_map(lat, lon, points):
-    map = folium.Map(location=[lat, lon], zoom_start=13)
+    map = folium.Map(location=[lat, lon], zoom_start=17)
+
+    # Add the main point
     folium.Marker([lat, lon], popup='Current Location', icon=folium.Icon(color='red')).add_to(map)
+
+    # Add the nearby points
     for pt in points[1:]:
         folium.Marker([pt[1], pt[0]], icon=folium.Icon(color='blue')).add_to(map)
-    map_path = 'static/maps/map.html'
+
+    map_path = os.path.join(settings.BASE_DIR, 'static/maps/map.html')
     map.save(map_path)
-    return map_path
+
+    return '/static/maps/map.html'
 
 def send_notification(place_name):
     notification.notify(
