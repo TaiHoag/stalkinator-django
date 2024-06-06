@@ -26,6 +26,7 @@ WORK IN PROGRESS
     ```
 
     *seperate files modification needed for .env*
+    **SKIP THIS FOR TESTING AND CONTRIBUTING**
 
 3. **Install Dependencies:**
 
