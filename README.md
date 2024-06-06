@@ -18,23 +18,13 @@ WORK IN PROGRESS
     cd stalkinator-django
     ```
 
-2. **Create a Virtual Environment:**
-
-    ```bash
-    python -m venv .env
-    source .env/bin/activate  # On Windows use `.env\Scripts\activate`
-    ```
-
-    *seperate files modification needed for .env*
-    **SKIP THIS FOR TESTING AND CONTRIBUTING**
-
-3. **Install Dependencies:**
+2. **Install Dependencies:**
 
     ```bash
     pip install -r requirements.txt
     ```
 
-4. **Configure the Database:**
+3. **Configure the Database:**
 
     Edit the `settings.py` file to configure your database settings. The default setup uses SQLite.
 
@@ -47,25 +37,25 @@ WORK IN PROGRESS
     }
     ```
 
-5. **Run Migrations:**
+4. **Run Migrations:**
 
     ```bash
     python manage.py migrate
     ```
 
-6. **Create a Superuser (Admin):**
+5. **Create a Superuser (Admin):**
 
     ```bash
     python manage.py createsuperuser
     ```
 
-7. **Run the Development Server:**
+6. **Run the Development Server:**
 
     ```bash
     python manage.py runserver
     ```
 
-8. **Access the Application:**
+7. **Access the Application:**
 
     Open your web browser and go to `http://127.0.0.1:8000/`.
 
