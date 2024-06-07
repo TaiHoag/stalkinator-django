@@ -101,7 +101,7 @@ def remove_geofence(request, pk):
 def tracker_data(request):
     api = get_token()
     last_value = get_tracker_location_data(api)
-    lat, lon, points, close_places, map_url = geoapify(last_value)
+    lat, lon, points, close_places, map_url = geoapify(last_value, request.user)
     now = datetime.datetime.now()
 
     data = {
@@ -113,6 +113,7 @@ def tracker_data(request):
     }
 
     return JsonResponse(data)
+
 
 def get_token():
     client_id = "ycJbMxjaptO0kOweZop4v5R6nBsD1i5K"
