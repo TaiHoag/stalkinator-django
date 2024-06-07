@@ -61,7 +61,7 @@ def logout_view(request):
 def tracker_view(request):
     api = get_token()
     last_value = get_tracker_location_data(api)
-    lat, lon, points, close_places, map_url = geoapify(last_value)
+    lat, lon, points, close_places, map_url = geoapify(last_value, request.user)
     now = datetime.datetime.now()
 
     context = {
@@ -152,11 +152,20 @@ def get_tracker_location_data(api):
     except ApiException as e:
         print("Got an exception: {}".format(e))
 
-def geoapify(last_value):
+def geoapify(last_value, user):
     lat = last_value['lat']
     lon = last_value['lon']
     API_KEY = "cd89b5f6cefc4b9ebf4f94117e19577e"
-    categories = "catering.pub,accommodation.motel,commercial.smoking,adult.nightclub,commercial.erotic,accommodation.hotel,catering.bar,adult"
+
+    # Fetch user's geofences and categories
+    geofences = Geofence.objects.filter(user=user)
+    categories = set()
+    for geofence in geofences:
+        if geofence.categories:
+            categories.update(geofence.categories.split(','))
+
+    categories = ",".join(categories)
+
     url = f"https://api.geoapify.com/v2/places?categories={categories}&filter=circle:{lon},{lat},5000&bias=proximity:{lon},{lat}&limit=500&apiKey={API_KEY}"
 
     response = requests.get(url)

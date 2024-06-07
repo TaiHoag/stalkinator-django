@@ -11,6 +11,7 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2',)
 
 class GeofenceForm(forms.ModelForm):
+    categories = forms.CharField(help_text="Enter categories separated by commas (e.g., catering.pub, accommodation.hotel)")
     class Meta:
         model = Geofence
-        fields = ('name', 'latitude', 'longitude', 'radius')
+        fields = ['name', 'latitude', 'longitude', 'radius', 'categories']

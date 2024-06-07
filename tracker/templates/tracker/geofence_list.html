@@ -3,39 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geofences - GeoTracker</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Geofence List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            color: #fff;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .list-group-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">GeoTracker</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tracker_view' %}">Tracker</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'geofence_list' %}">Geofences</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container mt-5">
-        <h2>Your Geofences</h2>
-        <ul>
+    <div class="card">
+        <h2 class="text-center">Geofences</h2>
+        <ul class="list-group">
             {% for geofence in geofences %}
-                <li>{{ geofence.name }} - <a href="{% url 'remove_geofence' geofence.pk %}">Remove</a></li>
+                <li class="list-group-item">
+                    <strong>{{ geofence.name }}</strong><br>
+                    Latitude: {{ geofence.latitude }}<br>
+                    Longitude: {{ geofence.longitude }}<br>
+                    Radius: {{ geofence.radius }}m<br>
+                    Categories: {{ geofence.categories }}
+                    <div class="text-end">
+                        <a href="{% url 'remove_geofence' geofence.pk %}" class="btn btn-danger btn-sm mt-2">Remove</a>
+                    </div>
+                </li>
             {% endfor %}
         </ul>
-        <a href="{% url 'add_geofence' %}" class="btn btn-primary">Add Geofence</a>
+        <div class="text-center mt-3">
+            <a href="{% url 'add_geofence' %}" class="btn btn-primary">Add Geofence</a>
+        </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.com/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

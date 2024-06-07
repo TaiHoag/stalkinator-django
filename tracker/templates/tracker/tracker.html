@@ -3,8 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracker - GeoTracker</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>GeoTracker</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'icon/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+        }
+        .navbar {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .nav-link {
+            color: #fff !important;
+        }
+        .content-wrapper {
+            position: absolute;
+            top: 70px;
+            left: 50px;
+            color: #fff;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .list-group-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+        }
+    </style>
     <script>
         function fetchData() {
             fetch("{% url 'tracker_data' %}")
@@ -18,6 +64,7 @@
                     closePlacesList.innerHTML = '';
                     data.close_places.forEach(place => {
                         let li = document.createElement('li');
+                        li.className = 'list-group-item';
                         li.innerText = place;
                         closePlacesList.appendChild(li);
                     });
@@ -32,10 +79,16 @@
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <a class="navbar-brand" href="#">GeoTracker</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'tracker_view' %}">Tracker</a>
                 </li>
@@ -43,34 +96,38 @@
                     <a class="nav-link" href="{% url 'geofence_list' %}">Geofences</a>
                 </li>
                 <li class="nav-item">
-                    <form method="POST" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-link nav-link" style="display:inline;cursor:pointer;">Logout</button>
-                    </form>
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1>GPS Coordinates</h1>
-        <p>Latitude: <span id="lat">{{ lat }}</span></p>
-        <p>Longitude: <span id="lon">{{ lon }}</span></p>
-        <p>Last Update Time: <span id="update_time">{{ update_time }}</span></p>
-
-        <h2>Close Places</h2>
-        <ul id="close_places">
-            {% for place in close_places %}
-                <li>{{ place }}</li>
-            {% endfor %}
-        </ul>
-
-        <h2>Map</h2>
-        <iframe id="map" src="{{ map_url }}" width="1200" height="900"></iframe>
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>GPS Coordinates</h4>
+                            <p>Latitude: <span id="lat">{{ lat }}</span></p>
+                            <p>Longitude: <span id="lon">{{ lon }}</span></p>
+                            <p>Last Update Time: <span id="update_time">{{ update_time }}</span></p>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h4>Close Places</h4>
+                            <ul id="close_places" class="list-group">
+                                {% for place in close_places %}
+                                    <li class="list-group-item">{{ place }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.com/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <iframe id="map" src="{{ map_url }}" frameborder="0"></iframe>
 </body>
 </html>
